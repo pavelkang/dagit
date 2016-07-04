@@ -1,0 +1,119 @@
+<html>
+    <head>
+        <title>OO</title>
+        <script src="cytoscape.js"></script>
+        <script src="jquery.js"></script>
+        <script src="semantic/semantic.min.js"></script>
+        <link rel="stylesheet" href="semantic/semantic.min.css" type="text/css" media="screen" />
+    </head>
+    <body class="container">
+        <div class="board">
+            <h1 class="ui center aligned header myhead" style="color:white;">Dashboard</h1>
+            <div id="board1">
+                <h1 id="taskname" class="ui center aligned header">Current task</h1>
+                <h4 id="taskdes" class="ui center aligned header"">Task description...</h4>
+            </div>
+            <div id="board2" style="margin-top: 15px;">
+                <div>
+                    <h3 class="ui center aligned header">Add child task</h3>
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            Name
+                        </div>
+                        <input type="text" placeholder="New Task Name" id="newtaskname">
+                    </div>
+                    <div class="ui labeled input">
+                        <div class="ui label">
+                            Detail
+                        </div>
+                        <input type="text" placeholder="Describe your task" id="newtaskdes">
+                    </div>
+                    <center>
+                        <button class="ui button" onclick="addChildButtonOnClick()">Add new task</button>
+                        </center>
+                </div>
+            </div>
+            <div id="board3" class="ui feed">
+                <h3 class="ui center aligned header">Requests</h3>
+                <div class="event">
+                    <div class="label">
+                        <img src="patrick.png">
+                    </div>
+                    <div class="content">
+                        <div class="summary">
+                            <a class="user">
+                                Patrick
+                            </a> requests to add
+                            <a>
+                                Task: Hackathon Demo
+                            </a>
+                            <div class="date">
+                                1 Hour Ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <center>
+                    <div class="ui blue button">Yes</div>
+                    <div class="ui red button">No</div>
+                </center>
+                <div class="event">
+                    <div class="label">
+                        <img src="jenny.jpg">
+                    </div>
+                    <div class="content">
+                        <div class="summary">
+                            <a class="user">
+                                Jenny
+                            </a> requests to add
+                            <a>
+                                Task: Team meeting
+                            </a>
+                            <div class="date">
+                                1 Hour Ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div id="cy"></div>
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
+        <script src="graph.js"></script>
+    </body>
+
+    <style>
+
+     #board1 {
+         color: #3b5998;
+         background-color: #ccc;
+     }
+     #board2 {
+         background-color: #ccc;
+     }
+     #board3 {
+         background-color: #ccc;
+     }
+     .board {
+         width: 250px;
+         float: left;
+         background-color: #3b5998;
+         height: 100%;
+     }
+     .content {
+         margin-left: 260px;
+         width: 100%;
+     }
+     #cy {
+         width: 1500px;
+         height: 1000px;
+         /* display: block; */
+         border: dotted;
+     }
+     .myhead {
+
+     }
+    </style>
+</html>
