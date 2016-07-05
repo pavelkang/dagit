@@ -2,6 +2,21 @@
 var options = {
   name: 'breadthfirst',
 };
+var TASK_NAME = "Current task";
+var TASK_DES  = "Task description...";
+var ADD_ROOT_TASK = "Add new root task";
+var ADD_CHILD_TASK = "Add new child task";
+
+var clearBoard1 = function() {
+  $("#taskname").text(TASK_NAME);
+  $("#taskdes").text(TASK_DES);
+}
+
+var clearBoard2 = function() {
+  $("#newtaskname").val("");
+  $("#newtaskdes").val("");
+}
+
 
 // Initialize Firebase
 // var config = {
@@ -16,6 +31,21 @@ var options = {
 // globals
 var current_selected_node = null;
 var current_id = 3;
+clearBoard1();
+$("#newtasklabel").text(ADD_ROOT_TASK);
+
+var switchBoard2 = function() {
+  clearBoard2();
+  if (current_selected_node === null) {
+    // now: add new root task
+    // new: add new child task
+    $("#newtasklabel").text(ADD_CHILD_TASK);
+  } else {
+    // now: add new child task
+    // new: add new root task
+    $("#newtasklabel").text(ADD_ROOT_TASK);
+  }
+}
 
 var addChildButtonOnClick = function() {
   var name = $("#newtaskname").val();
@@ -29,21 +59,28 @@ var addChildButtonOnClick = function() {
     return ;
   }
   if (current_selected_node === null) {
-    alert('no selected');
+    // add root node
+    var node = _createNode(current_id, name, des);
+    current_id += 1;
+    cy.add(node);
+    cy.layout(options);
+    clearBoard2();
     return ;
   }
   console.log(name);
   var node = _createNode(current_id, name, des);
   var edge = _createEdge(current_selected_node.id(),
                          current_id);
-  console.log(node);
-  console.log(edge);
   current_id += 1;
   node.data["parent"] = current_selected_node;
 
+  // add elements then re-layout
   cy.add(node);
   cy.add(edge);
   cy.layout( options );
+
+  clearBoard1();
+  clearBoard2();
 };
 
 // API supported
@@ -52,9 +89,9 @@ var updateBoardOnTap = function(id) {
   var node = cy.$('#'+id);
   var data = node.data();
   var nameDisplay = document.getElementById('taskname');
-  nameDisplay.innerHTML = data.info.taskname;
+  nameDisplay.innerHTML = data.taskname;
   var desDisplay = document.getElementById('taskdes');
-  desDisplay.innerHTML = data.info.des;
+  desDisplay.innerHTML = data.des;
 }
 
 var addChild = function(node) {
@@ -72,18 +109,26 @@ var _createNode = function(_id, _taskname, _des) {
     group: "nodes",
     data: {
       id: _id,
-      info: {
-        taskname: _taskname,
-        des: _des
-      },
+      des: _des,
+      taskname: _taskname,
+      progress: 0,
       grabbable: false
     }
   };
 }
 
+// var setProgress(p) {
+//   // if (p == -1) {
+
+//   // } else if
+// }
+
 // callback function when tapping on a node
-var nodeOnTap = function(evt) {
+var onNodeTap = function(evt) {
   var node = evt.cyTarget;
+  if (current_selected_node === null) {
+    switchBoard2();
+  }
   current_selected_node = node;
   updateBoardOnTap(node.id());
 };
@@ -112,7 +157,8 @@ var cy = cytoscape({
       selector: 'node',
       style: {
         'background-color': '#666',
-        'label': 'data(id)'
+        'label': 'data(taskname)',
+        'font-family': ['Lato']
       }
     },
 
@@ -129,5 +175,21 @@ var cy = cytoscape({
   ],
 });
 
-cy.on('tap', 'node', nodeOnTap);
+var onBackgroundTap = function(evt) {
+  if (evt.cyTarget === cy) {
+    clearBoard1();
+    if (current_selected_node != null) {
+      switchBoard2();
+    }
+    current_selected_node = null;
+  }
+}
+
+$("#yesbutton").on('click', function(evt) {
+  $('#firstevent').addClass('animated fadeOutLeft');
+  //$('#firstevent').remove();
+});
+
+cy.on('tap', 'node', onNodeTap);
+cy.on('tap', onBackgroundTap);
 cy.layout( options );
