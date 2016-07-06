@@ -52,6 +52,12 @@ var displayProgress = function(p) {
     progressBar.progress({percent: 50});
     progressBar.removeClass("success");
     progressBar.addClass("red");
+    cy.style()
+      .selector('#'+current_id)
+      .style({
+	"border-color": "red",
+	"border-width": "2px"	
+      }).update();
     break;
   case 1: // set working
     progressBar.css("display", "block");
@@ -71,8 +77,7 @@ var displayProgress = function(p) {
       .style({
 	"border-color": "#7CFC00",
 	"border-width": "2px"	
-      }).update();    
-
+      }).update();
     break;
   case 3: // nothing
     progressBar.removeClass("red");
@@ -279,6 +284,14 @@ var cy = cytoscape({
     }
   ],
 });
+
+var yo = {
+  "tasks" : [
+    {"name": "x", "des" : "y", "progress" : 3, "children" : []},
+    {"name": "x", "des" : "y", "progress" : 3, "children" : []},
+    {"name": "x", "des" : "y", "progress" : 3, "children" : []},
+  ]
+}
 
 var getMyFBTasks = function() {
   var aid = _createNode('Ship D3499719', 'Ship this diff once all tests pass');
