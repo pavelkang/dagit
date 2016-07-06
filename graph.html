@@ -12,13 +12,13 @@
             <h1 class="ui center aligned header myhead" style="color:white;">Dashboard</h1>
             <div id="board1">
                 <h1 id="taskname" class="ui center aligned header"></h1>
-                <div class="ui green progress" id="progress">
+                <div class="ui green progress" id="progress" data-value="0" data-total="100">
                     <div class="bar"></div>
                 </div>
                 <div class="ui three buttons">
-                    <div class="ui basic red button">Blocked</div>
-                    <div class="ui basic orange button">Working</div>
-                    <div class="ui basic green button">Finished</div>
+                    <div class="ui basic red button" onclick="setAndDisplayProgress(0)" id="blockedbutton">Blocked</div>
+                    <div class="ui basic orange button" onclick="setAndDisplayProgress(1)" id="workingbutton">Working</div>
+                    <div class="ui basic green button" onclick="setAndDisplayProgress(2)" id="finishedbutton">Finished</div>
                 </div>
                 <h4 id="taskdes" class="ui center aligned header""></h4>
             </div>
@@ -130,6 +130,9 @@
      #addnewtaskbutton {
          background-color: #3b5998;
          color: white;
+     }
+     .working {
+     background-color: #3b5998;
      }
     </style>
 </html>

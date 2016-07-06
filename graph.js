@@ -1,3 +1,16 @@
+// TODO we need a DS to traverse and render
+//
+
+var COLORS = ["#FFB6C1", "#BCD2EE", "#FFD700", "#FF7F00", "#FF6347"]
+var color_i = 0;
+var getColor = function() {
+  var color = COLORS[color_i % COLORS.length];
+  color_i += 1;
+  return color;
+}
+
+$('#progress').progress();
+
 // layout
 var options = {
   name: 'breadthfirst',
@@ -17,6 +30,63 @@ var clearBoard2 = function() {
   $("#newtaskdes").val("");
 }
 
+var setProgress = function(p) {
+  if (current_selected_node === null) {
+    return ;
+  }
+  current_selected_node.data('progress', p);
+}
+
+var displayProgress = function(p) {
+  var progressBar = $("#progress");
+  var data = current_selected_node.data();
+  var current_id = data.id;
+  switch (p) {
+  case -1: // hide progress bar
+    progressBar.css("display", "none");
+    break;
+  case 0: // set block
+    progressBar.css("display", "block");
+    progressBar.removeClass("green");
+    progressBar.removeClass("orange");
+    progressBar.progress({percent: 50});
+    progressBar.removeClass("success");
+    progressBar.addClass("red");
+    break;
+  case 1: // set working
+    progressBar.css("display", "block");
+    progressBar.removeClass("green");
+    progressBar.removeClass("red");
+    progressBar.progress({percent: 50});
+    progressBar.removeClass("success");
+    progressBar.addClass("orange");
+    break;
+  case 2: // set finished
+    progressBar.css("display", "block");
+    progressBar.removeClass("red");
+    progressBar.removeClass("orange");
+    progressBar.progress({percent: 100});
+    cy.style()
+      .selector('#'+current_id)
+      .style({
+	"border-color": "#7CFC00",
+	"border-width": "2px"	
+      }).update();    
+
+    break;
+  case 3: // nothing
+    progressBar.removeClass("red");
+    progressBar.removeClass("orange");
+    progressBar.removeClass("green");
+    progressBar.progress({percent: 0});
+  }  
+}
+
+var setAndDisplayProgress = function(p) {
+  setProgress(p);
+  displayProgress(p);
+}
+
 
 // Initialize Firebase
 // var config = {
@@ -30,7 +100,7 @@ var clearBoard2 = function() {
 
 // globals
 var current_selected_node = null;
-var current_id = 3;
+var current_id = 1;
 clearBoard1();
 $("#newtasklabel").text(ADD_ROOT_TASK);
 
@@ -60,25 +130,13 @@ var addChildButtonOnClick = function() {
   }
   if (current_selected_node === null) {
     // add root node
-    var node = _createNode(current_id, name, des);
-    current_id += 1;
-    cy.add(node);
+    var id = _createNode(name, des);
     cy.layout(options);
     clearBoard2();
     return ;
   }
-  console.log(name);
-  var node = _createNode(current_id, name, des);
-  var edge = _createEdge(current_selected_node.id(),
-                         current_id);
-  current_id += 1;
-  node.data["parent"] = current_selected_node;
-
-  // add elements then re-layout
-  cy.add(node);
-  cy.add(edge);
+  var node_id = _createNodeWithParent(name, des, current_selected_node);
   cy.layout( options );
-
   clearBoard1();
   clearBoard2();
 };
@@ -104,37 +162,85 @@ var deleteNode = function() {
 
 // helper functions
 // create a node
-var _createNode = function(_id, _taskname, _des) {
-  return {
-    group: "nodes",
-    data: {
-      id: _id,
-      des: _des,
-      taskname: _taskname,
-      progress: 0,
-      grabbable: false
-    }
-  };
+var _createNode = function(_taskname, _des, parentColor = null) {
+  var _id = current_id.toString();
+  current_id += 1;
+  var node;
+  if (parentColor) {
+    node = {
+      group: "nodes",
+      data: {
+	id: _id,
+	des: _des,
+	taskname: _taskname,
+	progress: 3,
+	grabbable: false,
+	color: parentColor,
+      }
+    };
+  } else {
+    var c = getColor();
+    node = {
+      group: "nodes",
+      data: {
+	id: _id,
+	des: _des,
+	taskname: _taskname,
+	progress: 3,
+	grabbable: false,
+	color: c,
+      }
+    };
+  }
+  cy.add(node);
+  cy.style()
+    .selector('#'+_id)
+    .style({
+      'background-color': node.data.color
+    }).update();
+  return _id;
 }
 
-// var setProgress(p) {
-//   // if (p == -1) {
+var _createNodeWithParent = function(_taskname, _des, _parent) {
+  var parent_data = _parent.data();
+  var node_id = _createNode(_taskname, _des, parent_data.color);
+  cy.add(_createEdge(_parent.id(), node_id));
+  var node = cy.getElementById("#"+node_id);
+  node.data('parent', parent_data.id);
+  return node_id;
+}
 
-//   // } else if
-// }
+var enableBoard1 = function() {
+  $("#progress").removeClass("disabled");
+  $("#blockedbutton").removeClass("disabled");
+  $("#workingbutton").removeClass("disabled");
+  $("#finishedbutton").removeClass("disabled");
+}
+
+var disableBoard1 = function() {
+  $("#progress").addClass("disabled");
+  $("#blockedbutton").addClass("disabled");
+  $("#workingbutton").addClass("disabled");
+  $("#finishedbutton").addClass("disabled");
+}
 
 // callback function when tapping on a node
 var onNodeTap = function(evt) {
   var node = evt.cyTarget;
+  var data = node.data();
   if (current_selected_node === null) {
     switchBoard2();
+    enableBoard1();
   }
   current_selected_node = node;
+  displayProgress(data.progress);
   updateBoardOnTap(node.id());
 };
 
 var _createEdge = function(sid, tid) {
+  current_id += 1;
   return {
+    group: "edges",
     data: {
       id: sid+tid,
       source: sid,
@@ -145,13 +251,7 @@ var _createEdge = function(sid, tid) {
 
 var cy = cytoscape({
   container: document.getElementById('cy'), // container to render in
-  elements: [ // list of graph elements to start with
-    _createNode('1', 'Intern ramp-up', 'Get familiar with internal tools'),
-    _createNode('2', 'Hard task', 'A slightly harder task. You can do it!'),
-    { // edge ab
-      data: { id: '12', source: '1', target: '2' }
-    }
-  ],
+  elements: [],
   style: [ // the stylesheet for the graph
     {
       selector: 'node',
@@ -161,7 +261,12 @@ var cy = cytoscape({
         'font-family': ['Lato']
       }
     },
-
+    {
+      selector: '#1',
+      style: {
+	"background-color": "blue",
+      }
+    },
     {
       selector: 'edge',
       style: {
@@ -175,10 +280,26 @@ var cy = cytoscape({
   ],
 });
 
+var getMyFBTasks = function() {
+  var aid = _createNode('Ship D3499719', 'Ship this diff once all tests pass');
+  var a = cy.getElementById(aid);
+  var bid = _createNodeWithParent('Impl. new header', 'Create a new header to allow Android-side rendering for notification stories', a);
+  var b = cy.getElementById(bid);
+  var cid = _createNode('Discuss NN with Min', 'Discuss more details about t8898728');
+  var did = _createNode('Test new model', 'Test the new model is working with canary and SLOG');
+  var d = cy.getElementById(did);
+  var eid = _createNodeWithParent('Publish new model', 'Publish the new model and check metrics', d);
+  var e = cy.getElementById(eid);
+  var fid = _createNode('Debug CC', 'Test CC inv. count fix');
+  var gid = _createNodeWithParent('Modify pipeline', 'Modify a python pipeline to use the new model', e);
+  var e = cy.getElementById(eid);
+}
+
 var onBackgroundTap = function(evt) {
   if (evt.cyTarget === cy) {
     clearBoard1();
     if (current_selected_node != null) {
+      disableBoard1();
       switchBoard2();
     }
     current_selected_node = null;
@@ -192,4 +313,6 @@ $("#yesbutton").on('click', function(evt) {
 
 cy.on('tap', 'node', onNodeTap);
 cy.on('tap', onBackgroundTap);
+getMyFBTasks();
 cy.layout( options );
+disableBoard1();
