@@ -1,5 +1,8 @@
 // TODO we need a DS to traverse and render
-//
+var myDropZone = $(".dropzone");
+myDropZone.on("complete", function(file) {
+  console.log(file);
+});
 
 var COLORS = ["#FFB6C1", "#BCD2EE", "#FFD700", "#FF7F00", "#FF6347"]
 var color_i = 0;
@@ -17,8 +20,8 @@ var options = {
 };
 var TASK_NAME = "Current task";
 var TASK_DES  = "Task description...";
-var ADD_ROOT_TASK = "Add new root task";
-var ADD_CHILD_TASK = "Add new child task";
+var ADD_ROOT_TASK = "Root";
+var ADD_CHILD_TASK = "Child";
 
 var clearBoard1 = function() {
   $("#taskname").text(TASK_NAME);
