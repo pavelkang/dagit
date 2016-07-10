@@ -1,4 +1,7 @@
 // TODO we need a DS to traverse and render
+// FEATURE: A dashboard showing all blocked tasks
+// 
+
 var myDropZone = $(".dropzone");
 myDropZone.on("complete", function(file) {
   console.log(file);
@@ -138,13 +141,13 @@ var addChildButtonOnClick = function() {
   }
   if (current_selected_node === null) {
     // add root node
-    var id = _createNode(name, des);
+    var id = _createNode(name, des, null);
     cy.layout(options);
     clearBoard2();
     return ;
   }
   var node_id = _createNodeWithParent(name, des, current_selected_node);
-  cy.layout( options );
+  //cy.layout( options );
   clearBoard1();
   clearBoard2();
 };
@@ -160,17 +163,9 @@ var updateBoardOnTap = function(id) {
   desDisplay.innerHTML = data.des;
 }
 
-var addChild = function(node) {
-  // add a child to current selected node
-}
-
-var deleteNode = function() {
-  // delete current node
-}
-
 // helper functions
 // create a node
-var _createNode = function(_taskname, _des, parentColor = null) {
+var _createNode = function(_taskname, _des, parentColor) {
   var _id = current_id.toString();
   current_id += 1;
   var node;
@@ -290,25 +285,64 @@ var cy = cytoscape({
 
 var yo = {
   "tasks" : [
-    {"name": "x", "des" : "y", "progress" : 3, "children" : []},
-    {"name": "x", "des" : "y", "progress" : 3, "children" : []},
-    {"name": "x", "des" : "y", "progress" : 3, "children" : []},
+    {"name": "x", "des" : "y", "progress" : 3, "children" : [
+      {"name": "x", "des": "y", "progress": 3, "children" : []}
+    ]},
+    {"name": "x", "des" : "y", "progress" : 3, "children" : [
+      {"name": "x", "des": "y", "progress": 3, "children" : []}
+    ]},
+    {"name": "x", "des" : "y", "progress" : 3, "children" : [
+      {"name": "x", "des": "y", "progress": 3, "children" : []}
+    ]},
   ]
 }
 
+var renderNode = function(node, parent) {
+  if (node === null) {
+    return ;
+  }
+  var node_id = null;
+  if (parent === null) {
+    node_id = _createNode(node.name, node.des, null);
+  } else {
+    node_id = _createNodeWithParent(node.name, node.des, parent);
+  }
+  var node_element = cy.getElementById(node_id);
+  for (var i = 0; i < node.children.length; i++) {
+    var child_node = node.children[i];
+    renderNode(child_node, node_element);
+  }
+}
+
+var renderTree = function(tree) {
+  for (var i = 0; i < tree.tasks.length; i++) {
+    renderNode(tree.tasks[i], null);
+  }
+}
+
 var getMyFBTasks = function() {
-  var aid = _createNode('Ship D3499719', 'Ship this diff once all tests pass');
+  var aid = _createNode('Ship D3499719', 'Ship this diff once all tests pass', null);
   var a = cy.getElementById(aid);
-  var bid = _createNodeWithParent('Impl. new header', 'Create a new header to allow Android-side rendering for notification stories', a);
+  var bid = _createNodeWithParent('Implement new header', 'Create a new header to allow Android-side rendering for notification stories', a);
   var b = cy.getElementById(bid);
-  var cid = _createNode('Discuss NN with Min', 'Discuss more details about t8898728');
-  var did = _createNode('Test new model', 'Test the new model is working with canary and SLOG');
+  var cid = _createNode('Discuss NN with Min', 'Discuss more details about t8898728', null);
+  var c = cy.getElementById(cid);
+  var did = _createNode('Test new model', 'Test the new model is working with canary and SLOG', null);
   var d = cy.getElementById(did);
   var eid = _createNodeWithParent('Publish new model', 'Publish the new model and check metrics', d);
   var e = cy.getElementById(eid);
-  var fid = _createNode('Debug CC', 'Test CC inv. count fix');
+  var fid = _createNode('Debug CC', 'Test CC inv. count fix', null);
   var gid = _createNodeWithParent('Modify pipeline', 'Modify a python pipeline to use the new model', e);
+  var g = cy.getElementById(gid);
   var e = cy.getElementById(eid);
+  var hid = _createNodeWithParent('Add logging to monitor', 'We need to monitor how many times this event is triggered', b);
+  var h = cy.getElementById(hid);
+  var iid = _createNodeWithParent('Run QE', 'Run QE to test metrics change', h);
+  var jid = _createNodeWithParent('Meet with Xianjie', 'Discuss and ask for code pointers', c);
+  var j = cy.getElementById(jid);
+  var kid = _createNodeWithParent('Modify the loss function', 'Modify the loss function to consider both BDT and NN', j);
+  var lid = _createNodeWithParent('Verify data', 'Verify with backfill that the pipeline actually gets the correct data', g);
+  var mid = _createNodeWithParent('Implement new notification policy', 'Weight both new and old models to get a hybrid cutoff threshold', g);
 }
 
 var onBackgroundTap = function(evt) {
@@ -330,5 +364,11 @@ $("#yesbutton").on('click', function(evt) {
 cy.on('tap', 'node', onNodeTap);
 cy.on('tap', onBackgroundTap);
 getMyFBTasks();
+//renderTree(yo);
 cy.layout( options );
 disableBoard1();
+
+// var files;
+// $('input[type=file]').on('change', function(evt) {
+//   files = event.target.files;
+// })

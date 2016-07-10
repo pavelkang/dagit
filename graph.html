@@ -1,175 +1,188 @@
 <html>
-    <head>
-        <title>OO</title>
-        <script src="cytoscape.js"></script>
-        <script src="jquery.js"></script>
-        <script src="semantic/semantic.min.js"></script>
-	<script src="dropzone.js"></script>
-        <link rel="stylesheet" href="semantic/semantic.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="animate.css">
-    </head>
-    <body class="container">
-        <div class="board">
-            <h1 class="ui center aligned header myhead" style="color:white;" id="dashboard">Dashboard</h1>
-	    <div class="ui horizontal divider inverted">
-	      <i class="tasks icon"></i> Task
-	    </div>
-            <div id="board1">
-	      <div id="content1">
-                <h2 id="taskname" class="ui center aligned header"></h2>
-                <div class="ui green progress" id="progress" data-value="0" data-total="100">
-                    <div class="bar"></div>
-                </div>
-                <div class="ui three buttons">
-                    <div class="ui basic red button" onclick="setAndDisplayProgress(0)" id="blockedbutton">Blocked</div>
-                    <div class="ui basic orange button" onclick="setAndDisplayProgress(1)" id="workingbutton">Working</div>
-                    <div class="ui basic green button" onclick="setAndDisplayProgress(2)" id="finishedbutton">Finished</div>
-                </div>
-                <h5 id="taskdes" class="ui center aligned header""></h5>
-              </div>
-            </div>
-	    <div class="ui horizontal divider inverted">
-	      <i class="edit icon"></i> New
-	    </div>
-            <div id="board2" style="margin-top: 15px;">
-                <div>
-                  <h2 class="ui center aligned header" id="newtasklabel"></h2>
-		    <center>
-                    <div class="ui labeled input">
-                        <div class="ui label">
-                            Name
-                        </div>
-                        <input type="text" placeholder="Task Name" id="newtaskname">
-                    </div>
-                    <div class="ui labeled input" style="padding: 15px;">
-                        <div class="ui label">
-                            Detail
-                        </div>
-                        <input type="text" placeholder="Describe your task" id="newtaskdes">
-                    </div>
-                    <button class="ui button" onclick="addChildButtonOnClick()" id="addnewtaskbutton">Add new task</button>
-		    </center>
-                </div>
-            </div>
-	    <div class="ui horizontal divider inverted">
-	      <i class="feed icon"></i> Requests
-	    </div>
-            <div id="board3">
-	      <div id="content3" class="ui feed">
-                <div class="event" id="firstevent">
-                    <div class="label">
-                        <img src="patrick.png">
-                    </div>
-                    <div class="content">
-                        <div class="summary">
-                            <a class="user">
-                                Patrick
-                            </a> requests to add
-                            <a>
-                                Task: Hackathon Demo
-                            </a>
-                            <div class="date">
-                                1 Hour Ago
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <center>
-                        <div class="ui blue button" id="yesbutton">Yes</div>
-                        <div class="ui red button" id="nobutton">No</div>
-                    </center>
-                </div>
-                <div class="event">
-                    <div class="label">
-                        <img src="jenny.jpg">
-                    </div>
-                    <div class="content">
-                        <div class="summary">
-                            <a class="user">
-                                Jenny
-                            </a> requests to add
-                            <a>
-                                Task: Team meeting
-                            </a>
-                            <div class="date">
-                                1 Hour Ago
-                            </div>
-                        </div>
-                    </div>
-                </div>
-		</div>
-            </div>
+  <head>
+    <title>OO</title>
+    <script src="cytoscape.js"></script>
+    <script src="jquery.js"></script>
+    <script src="semantic/semantic.min.js"></script>
+    <script src="dropzone.js"></script>
+    <link rel="stylesheet" href="semantic/semantic.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="animate.css">
+  </head>
+  <body class="container">
+    <div class="board">
+      <h1 class="ui center aligned header myhead" style="color:white;" id="dashboard">Dashboard</h1>
+      <div class="ui horizontal divider inverted">
+	<i class="tasks icon"></i> Task
+      </div>
+      <div id="board1">
+	<div id="content1">
+          <h2 id="taskname" class="ui center aligned header"></h2>
+          <div class="ui green progress" id="progress" data-value="0" data-total="100">
+            <div class="bar"></div>
+          </div>
+          <div class="ui three buttons">
+            <div class="ui basic red button" onclick="setAndDisplayProgress(0)" id="blockedbutton">Blocked</div>
+            <div class="ui basic orange button" onclick="setAndDisplayProgress(1)" id="workingbutton">Working</div>
+            <div class="ui basic green button" onclick="setAndDisplayProgress(2)" id="finishedbutton">Finished</div>
+          </div>
+          <h5 id="taskdes" class="ui center aligned header""></h5>
+							    </div>
+</div>
+<div class="ui horizontal divider inverted">
+  <i class="edit icon"></i> New
+</div>
+<div id="board2" style="margin-top: 15px;">
+  <div>
+    <h2 class="ui center aligned header" id="newtasklabel"></h2>
+    <center>
+      <div class="ui labeled input">
+        <div class="ui label">
+          Name
         </div>
-        <div class="content">
-            <div id="cy"></div>
+        <input type="text" placeholder="Task Name" id="newtaskname">
+      </div>
+      <div class="ui labeled input" style="padding: 15px;">
+        <div class="ui label">
+          Detail
         </div>
-        <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
-        <script src="graph.js"></script>
-    </body>
+        <input type="text" placeholder="Describe your task" id="newtaskdes">
+      </div>
+      <button class="ui button" onclick="addChildButtonOnClick()" id="addnewtaskbutton">Add new task</button>
+    </center>
+  </div>
+</div>
+<div class="ui horizontal divider inverted">
+  <i class="feed icon"></i> Requests
+</div>
+<div id="board3">
+  <div id="content3" class="ui feed">
+    <div class="event" id="firstevent">
+      <div class="label">
+        <img src="patrick.png">
+      </div>
+      <div class="content">
+        <div class="summary">
+          <a class="user">
+            Patrick
+          </a> requests to add
+          <a>
+            Task: Hackathon Demo
+          </a>
+          <div class="date">
+            1 Hour Ago
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <center>
+        <div class="ui blue button" id="yesbutton">Yes</div>
+        <div class="ui red button" id="nobutton">No</div>
+      </center>
+    </div>
+    <div class="event">
+      <div class="label">
+        <img src="jenny.jpg">
+      </div>
+      <div class="content">
+        <div class="summary">
+          <a class="user">
+            Jenny
+          </a> requests to add
+          <a>
+            Task: Team meeting
+          </a>
+          <div class="date">
+            1 Hour Ago
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="ui horizontal divider inverted"> -->
+  <!--   <i class="edit icon"></i> New -->
+  <!-- </div> -->
+  <!-- <input type="file">Upload CSV</input> -->
+</div>
+</div>
+<div class="content">
+  <div id="cy"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
+<script src="graph.js"></script>
+</body>
 
-    <style>
-
-     #board1 {
-         color: #3b5998;
-         background-color: #eee;
-         height: 250px;
-         overflow: scroll
-     }
-     #board2 {
-         background-color: #eee;
-         height: 200px
-     }
-     #board3 {
-         background-color: #eee;
-     }
-     .board {
-         width: 350px;
-         float: left;
-         background-color: #3b5998;
-         height: 100%;
-     }
-     .content {
-         margin-left: 360px;
-         width: 100%;
-     }
-     #cy {
-         width: 1500px;
-         height: 1000px;
-         /* display: block; */
-     }
-     #progress {
-         margin-left: 5px;
-         margin-right: 5px;
-     }
-     #addnewtaskbutton {
-         background-color: #3b5998;
-         color: white;
-     }
-     .working {
-     background-color: #3b5998;
-     }
-     #newtasklabel {
-       padding-top: 10px;
-       color: #3b5998;
-     }
-     #taskname {
-       color: #3b5998;
-       padding-top: 10px;
-     }
-     #content1 {
-      padding-left: 20px;
-     padding-right: 20px;
-    }
-     #dashboard {
-      padding-top: 20px;
-     padding-bottom: 10px;
-    }
-     #content3 {
-     padding-top: 10px;
-     padding-left: 10px;
-     padding-right: 10px;
-     padding-bottom: 10px;
-     }
-    </style>
+<style>
+  html, body {
+  height: 100%;
+  }
+  #board1 {
+  color: #3b5998;
+  background-color: #eee;
+  height: 25%;
+  overflow-y: scroll;
+  }
+  ::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
+  }
+  #board2 {
+  background-color: #eee;
+  height: 30%;
+  }
+  #board3 {
+  background-color: #eee;
+  }
+  .container {
+  height: 100%;
+  }
+  .board {
+  width: 350px;
+  float: left;
+  background-color: #3b5998;
+  height: 100%;
+  }
+  .content {
+  margin-left: 360px;
+  width: 100%;
+  }
+  #cy {
+  width: 1500px;
+  height: 100%;
+  /* display: block; */
+  }
+  #progress {
+  margin-left: 5px;
+  margin-right: 5px;
+  }
+  #addnewtaskbutton {
+  background-color: #3b5998;
+  color: white;
+  }
+  .working {
+  background-color: #3b5998;
+  }
+  #newtasklabel {
+  padding-top: 10px;
+  color: #3b5998;
+  }
+  #taskname {
+  color: #3b5998;
+  padding-top: 10px;
+  }
+  #content1 {
+  padding-left: 20px;
+  padding-right: 20px;
+  }
+  #dashboard {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  }
+  #content3 {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  }
+</style>
 </html>
