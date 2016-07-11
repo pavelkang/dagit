@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
+        <script>
+         // Initialize Firebase
+         var config = {
+             apiKey: "AIzaSyDaVKhrr2-Wn0GWYS2RTUtJRoXqhPyte9k",
+             authDomain: "project-8886141641362818091.firebaseapp.com",
+             databaseURL: "https://project-8886141641362818091.firebaseio.com",
+             storageBucket: "project-8886141641362818091.appspot.com",
+         };
+         firebase.initializeApp(config);
+        </script>
+        <link href="spectre.min.css" rel="stylesheet"/>
+        <script src="cytoscape.js"></script>
+        <script src="jquery.js"></script>
+        <script src="dash.js"></script>
+        <style>
+         html, body {
+             font-family: Lato;
+         }
+         .container {
+             padding: 0;
+         }
+         .sidebar {
+             height: 100%;
+             width: 250px;
+             background-color: #eee;
+             float: left;
+         }
+         #navbar, ul, li {
+             padding: 0;
+         }
+         .main {
+             width: 100%;
+         }
+         header {
+             width: 100%;
+         }
+         .sidebar {
+             color: #5764c6;
+         }
+         .tab {
+             font-size: medium;
+         }
+         .main {
+             margin-top: 2%;
+             margin-left: 3%;
+         }
+        </style>
+    </head>
+    <body>
+        <div class="container columns col-gapless">
+            <section class="sidebar column col-3 hide-sm">
+                <div class="dashboard">
+                    <div class="dashboard-header text-center">
+                        <h3>Dagit!</h3>
+                    </div>
+                    <hr/>
+                    <div id="board1" class="text-center"">
+                        <h4 contenteditable="true">Task Name</h4>
+                        <div class="progress" id="progress">
+                            progress
+                        </div>
+                        <div>change status</div>
+                        <h4 id="taskdes">description</h4>
+                    </div>
+                </div>
+            </section>
+            <section class="main column col-8">
+                <header>
+                    <ul class="tab" id="navbar">
+                        <li class="tab-item active">
+                            <a href="#">
+                                My Tasks
+                            </a>
+                        </li>
+                        <li class="tab-item">
+                            <a class="badge" data-badge="3" href="#">
+                                Shared With Me
+                            </a>
+                        </li>
+                    </ul>
+                </header>
+
+                <div id="sign-in-status"></div>
+                <div id="sign-in"></div>
+                <div id="account-details"></div>
+                <div class="divider"></div>
+                <div id="content"></div>
+            </section>
+        </div>
+    </body>
+</html>

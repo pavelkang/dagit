@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
+        <script>
+         // Initialize Firebase
+         var config = {
+             apiKey: "AIzaSyDaVKhrr2-Wn0GWYS2RTUtJRoXqhPyte9k",
+             authDomain: "project-8886141641362818091.firebaseapp.com",
+             databaseURL: "https://project-8886141641362818091.firebaseio.com",
+             storageBucket: "project-8886141641362818091.appspot.com",
+         };
+         firebase.initializeApp(config);
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/ui/live/0.4/firebase-ui-auth.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/live/0.4/firebase-ui-auth.css" />
+        <link href="spectre.min.css" rel="stylesheet"/>
+        <title>Dagit</title>
+    </head>
+    <body>
+        <script src="dagit.js"></script>
+        <h1>Welcome to dagit</h1>
+        <div id="firebaseui-auth-container"></div>
+    </body>
+</html>
